@@ -1,64 +1,56 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useMetaMask } from 'metamask-react'
 import Dialog from '@material-ui/core/Dialog'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 import DialogContent from '@material-ui/core/DialogContent'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles((theme) => ({
-  progress: {
-    width: '400px',
-    '& > * + *': {
-      marginTop: theme.spacing(2)
-    }
-  },
-  dialog: {
-    height: '200px'
-  }
-}))
+import { useMetaMaskDialogStyles } from './MetaMaskDialog.styles'
+import { useMetaMaskDialog } from './MetaMaskDialog.hooks'
 
 export const MetaMaskDialog = () => {
-  const { status, connect } = useMetaMask()
-  const [showDialog, setShowDialog] = useState(true)
-  const handleClose = () => setShowDialog(false)
-  const classes = useStyles()
+  const classes = useMetaMaskDialogStyles()
+  const { showDialog, connect, status, handleClose } = useMetaMaskDialog()
+
+  const onClose = () => {
+    if (status === 'connected') handleClose()
+  }
 
   const renderContent = (status: ReturnType<typeof useMetaMask>['status']) => {
     switch (status) {
       case 'connected':
         if (showDialog) {
-          setShowDialog(false)
+          handleClose()
         }
         return
       case 'notConnected':
         return (
-          <Button onClick={connect} color="primary">
+          <Button onClick={connect} color="primary" variant='outlined'>
             Connect to MetaMask
           </Button>
         )
       case 'unavailable':
         return (
-          <DialogContent>
+          <Typography>
             You need to install MetaMask to get going!
-        </DialogContent>
+          </Typography>
         )
       default:
         return (
-          <DialogContent className={classes.dialog}>
             <div className={classes.progress}>
               <LinearProgress color="secondary" />
             </div>
-          </DialogContent>
         )
     }
   }
   return (
     <Dialog
       open={showDialog}
-      onClose={handleClose}
+      onClose={onClose}
     >
-      {renderContent(status)}
+      <DialogContent className={classes.dialog}>
+        {renderContent(status)}
+      </DialogContent>
     </Dialog>
   )
 }

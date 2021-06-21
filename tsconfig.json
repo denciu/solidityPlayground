@@ -5,6 +5,7 @@
       "DOM"
     ],
     "skipLibCheck": true,
+    "strict": false,
     "module": "CommonJS",
     "moduleResolution": "node",
     "target": "ES2018",

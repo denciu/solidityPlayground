@@ -10,5 +10,10 @@ export const theme = createMuiTheme({
       main: '#3c4682'
     }
   },
-  typography: {}
+  typography: {
+    body2: {
+      fontSize: '1em',
+      fontWeight: 'bold'
+    }
+  }
 })

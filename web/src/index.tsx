@@ -11,10 +11,10 @@ import { ContractProvider } from './context/contracts'
 ReactDOM.render(
   <React.StrictMode>
     <MetaMaskProvider>
-    <ContractProvider>
-      <MuiThemeProvider theme={theme}>
-       <App />
-      </MuiThemeProvider>
+      <ContractProvider>
+        <MuiThemeProvider theme={theme}>
+          <App />
+        </MuiThemeProvider>
       </ContractProvider>
     </MetaMaskProvider>
   </React.StrictMode>,
