@@ -86,7 +86,7 @@ contract("Token Exchange", async accounts => {
       expect((await tokenA.balanceOf(user)).toString()).to.equal(expectedNewBalance.toString())
     })
 
-    it.only('allows owner to withdraw', async () => {
+    it('allows owner to withdraw', async () => {
       const contractBalance = await tokenA.balanceOf(tokenExchange.address)
       const ownersBalance = await tokenA.balanceOf(owner)
 
