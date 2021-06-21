@@ -57,6 +57,22 @@ contract TokenExchange is Ownable {
         ERC20(_tokenAddress).transfer(msg.sender, _amount);
     }
 
+    function calculateExchangeAmount(uint256 _amount, bool _isBuy)
+        public
+        view
+        returns (uint256)
+    {
+        return
+            ExchangeHelper.exchange({
+                amount: _amount,
+                exRate: price,
+                exRateDecimals: _decimals,
+                tokenFromDecimals: ERC20(tokenA).decimals(),
+                tokenToDecimals: ERC20(tokenB).decimals(),
+                isBuy: _isBuy
+            });
+    }
+
     function exchange(address _tokenAddress, uint256 _amount)
         public
         recognizedToken(_tokenAddress)
@@ -66,14 +82,7 @@ contract TokenExchange is Ownable {
         ERC20 tokenBInstance = ERC20(tokenB);
 
         if (_tokenAddress == tokenA) {
-            amountToExchange = ExchangeHelper.exchange({
-                amount: _amount,
-                exRate: price,
-                exRateDecimals: _decimals,
-                tokenFromDecimals: tokenAInstance.decimals(),
-                tokenToDecimals: tokenBInstance.decimals(),
-                isBuy: true
-            });
+            amountToExchange = calculateExchangeAmount(_amount, true);
 
             require(
                 tokenAInstance.transferFrom(msg.sender, address(this), _amount),
@@ -84,14 +93,7 @@ contract TokenExchange is Ownable {
                 "TokenExchange: Failed to transfer TB to user"
             );
         } else {
-            amountToExchange = ExchangeHelper.exchange({
-                amount: _amount,
-                exRate: price,
-                exRateDecimals: _decimals,
-                tokenFromDecimals: tokenAInstance.decimals(),
-                tokenToDecimals: tokenBInstance.decimals(),
-                isBuy: false
-            });
+            amountToExchange = calculateExchangeAmount(_amount, false);
 
             require(
                 tokenBInstance.transferFrom(msg.sender, address(this), _amount),
